@@ -17,5 +17,7 @@
 </form>
 <p/>
 <a href="LoginServlet">What happens if you go directly to login servlet without logging in?</a>
+<p/>
+<a href="LoginServlet?action=create">Create New User</a>
 </body>
 </html>
