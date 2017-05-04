@@ -18,7 +18,8 @@ posts into an arraylist which would be displayed in this JSP
 <!-- each html table row starts with tr, each cell starts with td -->
 <tr>
 <td><a href="ProfileServlet?userid=101&action=viewProfile">lisa@fox.net</a></td>
-<td>This is the text of Lisa's tweet</td>
+<td><a href="NewsfeedServelet?userid=101&action=viewPosts">Check Lisa's tweet</a></td>
+<td>${tweet}</td>
 </tr>
 <tr>
 <td><a href="ProfileServlet?userid=102&action=viewProfile">homer@fox.net</a></td>
