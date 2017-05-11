@@ -45,7 +45,7 @@ public class NewsfeedServelet extends HttpServlet {
 		
 		if (!feeduseremailid.isEmpty()||!(feeduseremailid==null)){
 		
-			User feeduser = (User) du.getUserByEmail(feeduseremailid);		
+			//User feeduser = (User) du.getUserByEmail(feeduseremailid);		
 		 
      		String nextPage;
 		

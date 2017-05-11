@@ -1,11 +1,12 @@
+
 package customTools;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-
 import util.MD5Util;
+
 import model.Bhuser;
 
 /**
@@ -155,6 +156,33 @@ public class DbUser {
 		boolean result = false;
 		q.setParameter("useremail", user.getUseremail());
 		q.setParameter("userpass", user.getUserpassword());
+		
+		try{
+			long userId = q.getSingleResult();
+			if (userId > 0)
+			{
+				result = true;
+			}
+		}catch (Exception e){
+			
+			result = false;
+		}
+		finally{
+				em.close();		
+		}	
+		return result;
+			
+	}
+	
+	public static boolean isValidUser(String email, String password)
+	{
+		EntityManager em = DbUtil.getEmFactory().createEntityManager();
+		String qString = "Select count(b.bhuserid) from Bhuser b "
+			+ "where b.useremail = :useremail and b.userpassword = :userpass";
+		TypedQuery<Long> q = em.createQuery(qString,Long.class);
+		boolean result = false;
+		q.setParameter("useremail", email);
+		q.setParameter("userpass", password);
 		
 		try{
 			long userId = q.getSingleResult();

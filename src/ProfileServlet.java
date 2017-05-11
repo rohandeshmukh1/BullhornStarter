@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import customTools.DbUser;
-@WebServlet("/ProfileServlet")
+import model.Bhuser;
+
 public class ProfileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -59,8 +60,12 @@ public class ProfileServlet extends HttpServlet {
 		//Anything that comes in from getParameter is a String so we need to 
 		//convert it to an integer. In Java the term for converting something is "cast"
 		//so we cast the incoming request parameter for userid to an int
-		int userid = Integer.parseInt(request.getParameter("userid"));
+		
 		String action = request.getParameter("action");
+		System.out.println(action);
+		int userid = Integer.parseInt(request.getParameter("userid"));
+		System.out.println(userid);
+	
 		/*
 		 * simplify this so that it always requires two parameters, userid and action
 		 * action is 'view' or 'edit'. If edit then the userID of the session(user) must be same as userID for profile
@@ -68,7 +73,7 @@ public class ProfileServlet extends HttpServlet {
 		 * all urls coming to this page must contain both parameters (userid and action) or get an error.
 		 */			
 		User loggedInUser = (User) session.getAttribute("user");//<-- here we are casting to a User object
-		User profileUser = DbUser.getUserById(userid);//<-- we don't have to cast this time because we have a userId and the DbUser class knows what to do with a userId
+		Bhuser profileUser = DbUser.getUser(userid);//<-- we don't have to cast this time because we have a userId and the DbUser class knows what to do with a userId
 
 		
 		//REVIEW: What do we know at this point....
@@ -87,30 +92,32 @@ public class ProfileServlet extends HttpServlet {
 			String userEmail = request.getParameter("useremail");
 			String userMotto = request.getParameter("usermotto");
 			profileUser.setMotto(userMotto);
-			profileUser.setEmail(userEmail);
-			DbUser.updateUser(profileUser);
+			profileUser.setUseremail(userEmail);
+			DbUser.update(profileUser);
 		}
 		///////////////////////////////////////////////////////////////////////////////
+System.out.println(loggedInUser.getUserId());
+System.out.println(profileUser.getBhuserid());
 
 		//if the loggedInUser is requesting their own profile
 		//then show profile.jsp in edit mode (ie... values in textboxes and a submit button)
-		if (loggedInUser.getUserId()==profileUser.getUserId()){
+		if (loggedInUser.getUserId()==profileUser.getBhuserid()){
 			//display profile as form
 			//the session variable editProfile is used by the JSP to
 			//display the profile in edit mode
 			request.setAttribute("editProfile", true);
-			request.setAttribute("userid", profileUser.getUserId());
+			request.setAttribute("userid", profileUser.getBhuserid());
 			request.setAttribute("username", profileUser.getUsername());
-			request.setAttribute("useremail", profileUser.getEmail());
+			request.setAttribute("useremail", profileUser.getUseremail());
 			request.setAttribute("usermotto", profileUser.getMotto());
 		}else{
 			//display profile read-only
 			//the session variable editProfile is used by the JSP to
 			//display the profile in read-only mode
 			request.setAttribute("editProfile", false);
-			request.setAttribute("userid", profileUser.getUserId());
+			request.setAttribute("userid", profileUser.getBhuserid());
 			request.setAttribute("username", profileUser.getUsername());
-			request.setAttribute("useremail", profileUser.getEmail());
+			request.setAttribute("useremail", profileUser.getUseremail());
 			request.setAttribute("usermotto", profileUser.getMotto());
 		}
 
@@ -120,6 +127,6 @@ public class ProfileServlet extends HttpServlet {
 
 		nextURL = "/profile.jsp";
 		//redirect to next page as indicated by the value of the nextURL variable
-		getServletContext().getRequestDispatcher(nextURL).forward(request,response);
+		getServletContext().getRequestDispatcher(nextURL).forward(request, response);
 	}
 }
